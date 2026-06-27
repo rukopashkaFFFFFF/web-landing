@@ -702,7 +702,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.2}
 <!-- ===== MODAL: CALLBACK ===== -->
 <div class="modal-overlay" id="callbackModal">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal('callbackModal')">✕</button>
+    <button class="modal-close" onclick="closeModal('callbackModal')" aria-label="Закрыть">✕</button>
     <h2>Обратный звонок</h2>
     <p class="sub">Оставьте номер — перезвоним за 5 минут в рабочее время</p>
     <form id="callbackForm">
@@ -724,8 +724,8 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.2}
 <!-- ===== MODAL: CALCULATOR FORM ===== -->
 <div class="modal-overlay" id="calcFormModal">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal('calcFormModal')">✕</button>
-    <h2>Получить точное коммерческое предложение</h2>
+    <button class="modal-close" onclick="closeModal('calcFormModal')" aria-label="Закрыть">✕</button>
+    <h2>Получить точное КП</h2>
     <p class="sub">Параметры из калькулятора будут переданы автоматически</p>
     <form id="calcForm">
       <input type="text" name="name" placeholder="Ваше имя" required>
@@ -740,7 +740,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.2}
 <!-- ===== MODAL: EXIT INTENT ===== -->
 <div class="modal-overlay exit-overlay" id="exitModal">
   <div class="modal" style="text-align:center">
-    <button class="modal-close" onclick="closeModal('exitModal')">✕</button>
+    <button class="modal-close" onclick="closeModal('exitModal')" aria-label="Закрыть">✕</button>
     <div style="font-size:3rem;margin-bottom:16px">🎁</div>
     <h2>Подождите!</h2>
     <p class="sub" style="max-width:400px;margin:0 auto">Получите <span class="offer-highlight">скидку 10%</span> на первый заказ — просто оставьте email</p>
@@ -755,7 +755,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.2}
 <!-- ===== MODAL: QUIZ ===== -->
 <div class="modal-overlay" id="quizModal">
   <div class="modal" style="max-width:640px">
-    <button class="modal-close" onclick="closeModal('quizModal')">✕</button>
+    <button class="modal-close" onclick="closeModal('quizModal')" aria-label="Закрыть">✕</button>
     <div class="quiz-progress" id="quizProgress"></div>
     <div id="quizSteps"></div>
   </div>
@@ -797,6 +797,8 @@ const REVIEWS = [
   {name:'Дмитрий Новиков',company:'SkillUp',city:'Екатеринбург',avatar:'ДН',text:'Образовательная платформа — сложная задача, но ребята справились отлично. Система работает стабильно, студенты довольны.',result:'300 студентов'},
   {name:'Елена Морозова',company:'AutoParts',city:'Новосибирск',avatar:'ЕМ',text:'Заказывали каталог с фильтрацией. Сделали быстро и качественно. Количество запросов через сайт выросло на 80%. Рекомендую!',result:'Запросы +80%'}
 ];
+
+function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
 
 const FAQ = [
   {q:'Сколько времени занимает разработка сайта?',a:'От брифинга до запуска — от 5 дней (сайт-визитка) до 45 дней (сложный портал). Средний срок — 14 дней. Точные сроки фиксируем в договоре.'},
@@ -856,13 +858,13 @@ let quizData={},quizStep=0;
 
 function openQuiz(){quizStep=0;quizData={};document.getElementById('quizModal').classList.add('open');document.body.style.overflow='hidden';renderQuizStep();renderQuizProgress()}
 function renderQuizProgress(){const p=document.getElementById('quizProgress');p.innerHTML=QUIZ_STEPS.map((_,i)=>`<div class="dot ${i<quizStep?'done':''} ${i===quizStep?'current':''}"></div>`).join('')}
-function renderQuizStep(){const step=QUIZ_STEPS[quizStep];const s=document.getElementById('quizSteps');let html=`<div class="quiz-step active"><h3>${step.title}</h3><p class="hint">${step.hint} · Шаг ${quizStep+1} из ${QUIZ_STEPS.length}</p>`;const fi=step.name;if(step.type==='cards'){html+=`<div class="quiz-cards">${step.options.map(o=>`<label class="quiz-card" onclick="selectQuizCard(this,'${fi}','${o.label}')"><div class="qicon">${o.icon}</div><span>${o.label}</span><input type="radio" name="${fi}"></label>`).join('')}</div>`}else if(step.type==='cards-multi'){html+=`<div class="quiz-cards">${step.options.map(o=>`<label class="quiz-card" onclick="this.classList.toggle('selected');const cb=this.querySelector('input');cb.checked=!cb.checked"><div class="qicon">${o.icon}</div><span>${o.label}</span><input type="checkbox" name="${fi}"></label>`).join('')}</div>`}else if(step.type==='text'){html+=`<input type="text" name="${fi}" placeholder="${step.placeholder||''}" value="${quizData[fi]||''}">`}else if(step.type==='checkboxes'){html+=`<div class="quiz-checkboxes">${step.options.map(o=>`<label><input type="checkbox" name="${fi}" value="${o}" ${(quizData[fi]||[]).includes(o)?'checked':''}> ${o}</label>`).join('')}</div>`}else if(step.type==='contacts'){html+=`<input type="text" name="name" placeholder="Ваше имя" value="${quizData.name||''}" required><input type="tel" name="phone" placeholder="Телефон" value="${quizData.phone||''}" required><input type="email" name="email" placeholder="Email" value="${quizData.email||''}"><input type="text" name="company" placeholder="Компания (необязательно)" value="${quizData.company||''}"><textarea name="comment" placeholder="Комментарий (необязательно)">${quizData.comment||''}</textarea><label class="quiz-agreement"><input type="checkbox" checked> Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</label>`}html+=`<div class="quiz-btns">${quizStep>0?'<button class="btn btn-ghost" onclick="prevQuizStep()">← Назад</button>':'<span></span>'}${quizStep<QUIZ_STEPS.length-1?'<button class="btn btn-accent" onclick="nextQuizStep()">Далее →</button>':'<button class="btn btn-accent" onclick="submitQuiz()">Отправить 📨</button>'}</div></div>`;s.innerHTML=html}
+function renderQuizStep(){const step=QUIZ_STEPS[quizStep];const s=document.getElementById('quizSteps');let html=`<div class="quiz-step active"><h3>${step.title}</h3><p class="hint">${step.hint} · Шаг ${quizStep+1} из ${QUIZ_STEPS.length}</p>`;const fi=step.name;if(step.type==='cards'){html+=`<div class="quiz-cards">${step.options.map(o=>`<label class="quiz-card" onclick="selectQuizCard(this,'${fi}','${o.label}')"><div class="qicon">${o.icon}</div><span>${o.label}</span><input type="radio" name="${fi}"></label>`).join('')}</div>`}else if(step.type==='cards-multi'){html+=`<div class="quiz-cards">${step.options.map(o=>`<label class="quiz-card" onclick="this.classList.toggle('selected');const cb=this.querySelector('input');cb.checked=!cb.checked"><div class="qicon">${o.icon}</div><span>${o.label}</span><input type="checkbox" name="${fi}" value="${o.label}"></label>`).join('')}</div>`}else if(step.type==='text'){html+=`<input type="text" name="${fi}" placeholder="${step.placeholder||''}" value="${esc(quizData[fi])||''}">`}else if(step.type==='checkboxes'){html+=`<div class="quiz-checkboxes">${step.options.map(o=>`<label><input type="checkbox" name="${fi}" value="${o}" ${(quizData[fi]||[]).includes(o)?'checked':''}> ${o}</label>`).join('')}</div>`}else if(step.type==='contacts'){html+=`<input type="text" name="name" placeholder="Ваше имя" value="${esc(quizData.name)||''}" required><input type="tel" name="phone" placeholder="Телефон" value="${esc(quizData.phone)||''}" required><input type="email" name="email" placeholder="Email" value="${esc(quizData.email)||''}"><input type="text" name="company" placeholder="Компания (необязательно)" value="${esc(quizData.company)||''}"><textarea name="comment" placeholder="Комментарий (необязательно)">${esc(quizData.comment)||''}</textarea><label class="quiz-agreement"><input type="checkbox" checked> Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</label>`}html+=`<div class="quiz-btns">${quizStep>0?'<button class="btn btn-ghost" onclick="prevQuizStep()">← Назад</button>':'<span></span>'}${quizStep<QUIZ_STEPS.length-1?'<button class="btn btn-accent" onclick="nextQuizStep()">Далее →</button>':'<button class="btn btn-accent" onclick="submitQuiz()">Отправить 📨</button>'}</div></div>`;s.innerHTML=html}
 function selectQuizCard(el,name,val){const parent=el.closest('.quiz-cards');parent.querySelectorAll('.quiz-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');el.querySelector('input').checked=true;quizData[name]=val}
 function nextQuizStep(){const step=QUIZ_STEPS[quizStep];const fi=step.name;if(step.type==='cards'){const sel=document.querySelector(`.quiz-step .quiz-card.selected input`);if(!sel){return}quizData[fi]=sel.value}else if(step.type==='cards-multi'){const cbs=document.querySelectorAll(`.quiz-step input[name="${fi}"]:checked`);if(cbs.length===0){return}quizData[fi]=[...cbs].map(c=>c.value)}else if(step.type==='text'){const inp=document.querySelector(`.quiz-step input[name="${fi}"]`);if(!inp.value.trim()){inp.focus();return}quizData[fi]=inp.value.trim()}else if(step.type==='checkboxes'){const cbs=document.querySelectorAll(`.quiz-step input[name="${fi}"]:checked`);quizData[fi]=[...cbs].map(c=>c.value)}else if(step.type==='contacts'){}quizStep++;renderQuizStep();renderQuizProgress()}
 function prevQuizStep(){quizStep--;renderQuizStep();renderQuizProgress()}
 
 function submitQuiz(){const inputs=document.querySelectorAll('.quiz-step input[name], .quiz-step textarea');inputs.forEach(i=>{if(i.name&&i.value)quizData[i.name]=i.value.trim()});if(!quizData.name||!quizData.phone){alert('Заполните имя и телефон');return}
-const orderId=generateOrderId();const appData=collectAppData('quiz',quizData,orderId);sendData(appData);const s=document.getElementById('quizSteps');const estPrice=calculateEstimate(quizData);s.innerHTML=`<div class="quiz-thanks"><div class="check-icon">✅</div><h3>Спасибо, ${quizData.name}!</h3><p class="order-id">Ваша заявка принята под номером ${orderId}</p><div class="est-price">Примерная стоимость: ${estPrice}</div><p style="color:var(--text-secondary);font-size:0.9rem;margin:12px 0">Наш менеджер свяжется с вами в течение 2 часов</p><button class="telegram-share" onclick="shareTelegram('${orderId}','${estPrice}')">📱 Поделиться в Telegram</button><br><button class="btn btn-outline" style="margin-top:12px" onclick="closeModal('quizModal')">Закрыть</button></div>`}
+const orderId=generateOrderId();const appData=collectAppData('quiz',quizData,orderId);sendData(appData);const s=document.getElementById('quizSteps');const estPrice=calculateEstimate(quizData);s.innerHTML=`<div class="quiz-thanks"><div class="check-icon">✅</div><h3>Спасибо, ${esc(quizData.name)}!</h3><p class="order-id">Ваша заявка принята под номером ${esc(orderId)}</p><div class="est-price">Примерная стоимость: ${esc(estPrice)}</div><p style="color:var(--text-secondary);font-size:0.9rem;margin:12px 0">Наш менеджер свяжется с вами в течение 2 часов</p><button class="telegram-share" onclick="shareTelegram('${orderId}','${estPrice}')">📱 Поделиться в Telegram</button><br><button class="btn btn-outline" style="margin-top:12px" onclick="closeModal('quizModal')">Закрыть</button></div>`}
 function calculateEstimate(d){const m={landing:[35000,150000],corp:[100000,350000],shop:[450000,1500000],visit:[15000,120000],portal:[500000,2000000],blog:[90000,300000]};if(Array.isArray(d.type)){const prices=d.type.map(t=>m[t]||[30000,150000]);const min=prices.reduce((a,b)=>a+b[0],0);const max=prices.reduce((a,b)=>a+b[1],0);return Math.round(min/2).toLocaleString('ru-RU')+' – '+Math.round(max/1.5).toLocaleString('ru-RU')+' ₽'}const t=d.type||'landing';const p=m[t]||[30000,150000];return p[0].toLocaleString('ru-RU')+' – '+p[1].toLocaleString('ru-RU')+' ₽'}
 
 /* ===== DATA COLLECTION ===== */

@@ -13,7 +13,8 @@ file_put_contents(__DIR__ . '/leads.txt', $log, FILE_APPEND | LOCK_EX);
 $to = 'fcknpolice@gmail.com';
 $subject = '=?UTF-8?B?' . base64_encode('Новая заявка ' . $input['id']) . '?=';
 $body = formatEmail($input);
-$headers = "From: no-reply@webcraft.local\r\nReply-To: {$input['contact']['email']}\r\nContent-Type: text/plain; charset=UTF-8\r\n";
+$replyTo = !empty($input['contact']['email']) ? $input['contact']['email'] : $to;
+$headers = "From: no-reply@webcraft.local\r\nReply-To: $replyTo\r\nContent-Type: text/plain; charset=UTF-8\r\n";
 @mail($to, $subject, $body, $headers);
 
 echo json_encode(['ok' => true, 'id' => $input['id']]);
