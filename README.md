@@ -71,14 +71,8 @@ cd web-landing
 php -S localhost:8080
 ```
 
-## Настройка Telegram
+## Настройки
 
-1. Создайте бота через [@BotFather](https://t.me/BotFather)
-2. Получите токен и ID чата
-3. Замените в `index.html`:
-   - `YOUR_BOT_TOKEN` → токен бота
-   - `YOUR_CHAT_ID` → ID чата
+**Telegram**: подключён бот @webresheniya_bot, уведомления приходят пользователю @reflexiyaa.
 
-## Настройка Email
-
-По умолчанию заявки сохраняются в `leads.txt`. Для отправки на почту настройте SMTP или используйте EmailJS/Formspree.
+**Email**: заявки сохраняются в `leads.txt`. Для отправки на почту настройте SMTP или используйте EmailJS/Formspree.
